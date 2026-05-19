@@ -1186,7 +1186,21 @@ const char *arch_to_linker_arch(ArchType arch)
 	UNREACHABLE;
 }
 
-static char *arch_to_target_triple(ArchOsTarget target, LinuxLibc linux_libc)
+static char *arm_elf_target_triple_from_cpu(const char *cpu)
+{
+	if (!cpu || str_eq(cpu, "generic"))
+	{
+		WARNING("Target 'elf-arm' should be configured with a Cortex-M cpu, e.g. 'cortex-m0', 'cortex-m3', 'cortex-m4', 'cortex-m7' or 'cortex-m33'. Falling back to 'thumbv7em-none-eabi'.");
+		return "thumbv7em-none-eabi";
+	}
+	if (str_eq(cpu, "cortex-m0") || str_eq(cpu, "cortex-m0plus")) return "thumbv6m-none-eabi";
+	if (str_eq(cpu, "cortex-m3")) return "thumbv7m-none-eabi";
+	if (str_eq(cpu, "cortex-m4") || str_eq(cpu, "cortex-m7")) return "thumbv7em-none-eabi";
+	if (str_eq(cpu, "cortex-m33")) return "thumbv8m.main-none-eabi";
+	return "thumbv7em-none-eabi";
+}
+
+static char *arch_to_target_triple(ArchOsTarget target, LinuxLibc linux_libc, const char *cpu)
 {
 	switch (target)
 	{
@@ -1210,6 +1224,7 @@ static char *arch_to_target_triple(ArchOsTarget target, LinuxLibc linux_libc)
 		case IOS_AARCH64: return "aarch64-apple-ios";
 		case MACOS_AARCH64: return "aarch64-apple-macosx";
 		case ELF_AARCH64: return "aarch64-unknown-elf";
+		case ELF_ARM: return arm_elf_target_triple_from_cpu(cpu);
 		case WINDOWS_AARCH64: return "aarch64-pc-windows-msvc";
 		case NETBSD_AARCH64: return "aarch64-unknown-netbsd";
 		case LINUX_RISCV32: return linux_libc == LINUX_LIBC_MUSL ? "riscv32-unknown-linux-musl" : "riscv32-unknown-linux-gnu";
@@ -1261,6 +1276,13 @@ static ArchType arch_from_llvm_string(StringSlice slice)
 	STRCASE("xscale", ARCH_TYPE_ARM)
 	STRCASE("armeb", ARCH_TYPE_ARMB)
 	STRCASE("xscaleeb", ARCH_TYPE_ARMB)
+	STRCASE("thumb", ARCH_TYPE_THUMB)
+	STRCASE("thumbv6m", ARCH_TYPE_THUMB)
+	STRCASE("thumbv7m", ARCH_TYPE_THUMB)
+	STRCASE("thumbv7em", ARCH_TYPE_THUMB)
+	STRCASE("thumbv8m.base", ARCH_TYPE_THUMB)
+	STRCASE("thumbv8m.main", ARCH_TYPE_THUMB)
+	STRCASE("thumbeb", ARCH_TYPE_THUMBEB)
 	STRCASE("arc", ARCH_TYPE_ARC)
 	STRCASE("avr", ARCH_TYPE_AVR)
 	STRCASE("bpfeb", ARCH_TYPE_BPFEB)
@@ -2193,7 +2215,7 @@ void target_setup(BuildTarget *build_target)
 	}
 #endif
 
-	compiler.platform.target_triple = arch_to_target_triple(build_target->arch_os_target, build_target->linuxpaths.libc);
+	compiler.platform.target_triple = arch_to_target_triple(build_target->arch_os_target, build_target->linuxpaths.libc, build_target->cpu);
 	ASSERT(compiler.platform.target_triple);
 
 	compiler.platform.alloca_address_space = 0;
@@ -2293,6 +2315,7 @@ void target_setup(BuildTarget *build_target)
 	compiler.platform.width_c_long = os_target_c_type_bits(compiler.platform.os, compiler.platform.arch, CTYPE_LONG);
 	compiler.platform.width_c_long_long = os_target_c_type_bits(compiler.platform.os, compiler.platform.arch, CTYPE_LONG_LONG);
 	compiler.platform.signed_c_char = os_target_signed_c_char_type(compiler.platform.os, compiler.platform.arch);
+	compiler.platform.cpu = build_target->cpu;
 	switch (compiler.platform.arch)
 	{
 		case ARCH_UNSUPPORTED:

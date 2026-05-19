@@ -2082,6 +2082,7 @@ const char *arch_os_target[ARCH_OS_TARGET_LAST + 1] = {
 		[ANDROID_AARCH64] = "android-aarch64",
 		[ANDROID_X86_64] = "android-x86_64",
 		[ELF_AARCH64] = "elf-aarch64",
+		[ELF_ARM] = "elf-arm",
 		[ELF_RISCV32] = "elf-riscv32",
 		[ELF_RISCV64] = "elf-riscv64",
 		[ELF_X86] = "elf-x86",

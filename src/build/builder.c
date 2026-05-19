@@ -318,6 +318,7 @@ static LinkLibc libc_from_arch_os(ArchOsTarget target)
 		case WASM64:
 		case MCU_X86:
 		case ELF_AARCH64:
+		case ELF_ARM:
 		case ELF_RISCV32:
 		case ELF_RISCV64:
 		case ELF_X86:

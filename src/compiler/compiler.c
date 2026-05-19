@@ -1254,6 +1254,9 @@ static int jump_buffer_size()
 		case ELF_XTENSA:
 			// Godbolt 68 => 17 with 32 bit pointers
 			return 17;
+		case ELF_ARM:
+			// ARM EABI/newlib uses 64 32-bit words for jmp_buf on Cortex-M
+			return 64;
 		case ELF_AVR:
 			// Extracted from avr-libc
 			return 12;

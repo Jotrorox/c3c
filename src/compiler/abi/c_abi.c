@@ -313,10 +313,10 @@ void c_abi_func_create(Signature *sig, FunctionPrototype *proto, Expr **vaargs)
 			return;
 		case ABI_XTENSA:
 		case ABI_AVR:
+		case ABI_ARM:
 			c_abi_func_create_default(proto, params, param_count, vaarg_params, vaarg_count);
 			return;
 		case ABI_UNKNOWN:
-		case ABI_ARM:
 		case ABI_PPC32:
 		case ABI_PPC64_SVR4:
 			break;

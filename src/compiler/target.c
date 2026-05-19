@@ -474,7 +474,7 @@ static inline void target_setup_arm_abi(void)
 				return;
 			}
 			compiler.platform.arm.abi_variant = ARM_ABI_AAPCS;
-			break;
+			return;
 	}
 	UNREACHABLE_VOID
 }
@@ -1249,6 +1249,10 @@ static bool arch_is_supported(ArchType arch)
 		case ARCH_TYPE_WASM64:
 		case ARCH_TYPE_X86_64:
 		case ARCH_TYPE_AARCH64:
+		case ARCH_TYPE_ARM:
+		case ARCH_TYPE_ARMB:
+		case ARCH_TYPE_THUMB:
+		case ARCH_TYPE_THUMBEB:
 		case ARCH_TYPE_RISCV32:
 		case ARCH_TYPE_RISCV64:
 			return true;

@@ -5,6 +5,8 @@
 ### Changes / improvements
 - Add `$$PROJECT_PATH`, accessible through `env::PROJECT_PATH`.
 - Deprecate `$field.get(a)` and `$field.set(a, b)`. Replaced by `a.$field` and `a.$field = b`.
+- Add `a.$eval($field)` as a variant of `a.$field`.
+- Add json pretty print.
 
 ### Stdlib changes
 - Add math::TAU / math::TWO_PI
@@ -16,7 +18,8 @@
 - Checking filesize on Win32 now correctly reports errors. Getting the filesize now rejects directories.
 - `ini::parse` and related takes an `error_line` argument to identify the line with error.
 - JSON marshaling will return INVALID_NUMBER when encountering a inf or NaN for a float.
- 
+- JSON decoding will reject `1.` literals.
+
 ### Fixes
 - `@volatile_store` on arrays were sometimes incorrectly lowered.
 - NPOT vectors as associated variables were incorrectly lowered on load. #3228
@@ -56,6 +59,15 @@
 - Copying compile time strings during compile time folding with strings containing 0 would sometimes get truncated. #3267
 - Pem parsing did not correctly handle empty body, nor when the first line was too short.
 - Additional pem parsing bugs on malformed data handled.
+- Compiler would crash when getting the `kind`, `qname`, or `alignment` of an `untypedlist`.
+- `untypedlist` incorrectly had `size` property.
+- JSON handling of UTF16 surrogate pairs fixed.
+- `base32`, `base64` and `codepage` would leak memory on encode/decode errors.
+- Indexing into a type with a `$reflect` value would sometimes cause a crash.
+- Using a faultdef hidden behind `@if` would cause a crash.
+- Taking the type of a macro method would cause a crash.
+- Cap array size to avoid overflow when making multidimensional arrays that are too large.
+- DynamicArenaAllocator would incorrectly handle some reuse cases.
 
 ## 0.8.0 Change list
 

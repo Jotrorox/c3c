@@ -1593,6 +1593,7 @@ typedef struct
 	bool is_inline : 1;
 	bool is_goto : 1;
 	bool is_string : 1;
+	bool is_aligned : 1;
 	union
 	{
 		AsmInlineBlock *block;
@@ -2116,6 +2117,8 @@ extern const char *kw_at_require;
 extern const char *kw_at_return;
 extern const char *kw_at_simd;
 extern const char *kw_alignment;
+extern const char *kw_bitoffset;
+extern const char *kw_bitsize;
 extern const char *kw_cname;
 extern const char *kw_compiler_rt;
 extern const char *kw_description;
@@ -2124,7 +2127,9 @@ extern const char *kw_get_tag;
 extern const char *kw_has_tag;
 extern const char *kw_in;
 extern const char *kw_inout;
+extern const char *kw_is_anonymous;
 extern const char *kw_is_const;
+extern const char *kw_is_nested;
 extern const char *kw_is_ordered;
 extern const char *kw_has_equals;
 extern const char *kw_kind;
@@ -2455,6 +2460,7 @@ void scratch_buffer_set_extern_decl_name(Decl *decl, bool clear);
 Expr *expr_new(ExprKind kind, SourceLocId start);
 Expr *expr_new_loc(ExprKind kind, SourceLoc *start);
 Expr *expr_new_const_int(SourceLocId loc, Type *type, uint64_t v);
+Expr *expr_new_const_float(SourceLocId loc, Type *type, Real v);
 Expr *expr_new_const_bool(int loc, Type *type, bool value);
 Expr *expr_new_const_typeid(SourceLocId loc, Type *type);
 Expr *expr_new_const_string(SourceLocId loc, const char *string);

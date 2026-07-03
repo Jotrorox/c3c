@@ -385,7 +385,7 @@ static inline void target_setup_aarch64_abi(void)
 static inline void target_setup_arm_abi(void)
 {
 	compiler.platform.abi = ABI_ARM;
-	if (compiler.platform.os)
+	if (compiler.platform.os == OS_TYPE_WIN32)
 	{
 		compiler.platform.arm.is_win32 = true;
 		compiler.platform.arm.variant = ARM_AAPCS;
@@ -1197,7 +1197,7 @@ static char *arm_elf_target_triple_from_cpu(const char *cpu)
 	if (str_eq(cpu, "cortex-m3")) return "thumbv7m-none-eabi";
 	if (str_eq(cpu, "cortex-m4") || str_eq(cpu, "cortex-m7")) return "thumbv7em-none-eabi";
 	if (str_eq(cpu, "cortex-m33")) return "thumbv8m.main-none-eabi";
-	return "thumbv7em-none-eabi";
+	error_exit("Unsupported CPU '%s' for target 'elf-arm'. Expected 'cortex-m0', 'cortex-m0plus', 'cortex-m3', 'cortex-m4', 'cortex-m7' or 'cortex-m33'.", cpu);
 }
 
 static char *arch_to_target_triple(ArchOsTarget target, LinuxLibc linux_libc, const char *cpu)
